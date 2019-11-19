@@ -49,8 +49,7 @@ static ssize_t xattr_getxattr(const char *path, const char *name,
     if (options & XATTR_XATTR_NOFOLLOW) {
         return extattr_get_link(path, EXTATTR_NAMESPACE_USER,
                                 name, value, size);
-    }
-    else {
+    } else {
         return extattr_get_file(path, EXTATTR_NAMESPACE_USER,
                                 name, value, size);
     }
@@ -76,16 +75,14 @@ static ssize_t xattr_setxattr(const char *path, const char *name,
         /* meh. FreeBSD doesn't really have this in its
          * API... Oh well.
          */
-    }
-    else if (options != 0) {
+    } else if (options != 0) {
         return -1;
     }
 
     if (nofollow) {
         rv = extattr_set_link(path, EXTATTR_NAMESPACE_USER,
                                 name, value, size);
-    }
-    else {
+    } else {
         rv = extattr_set_file(path, EXTATTR_NAMESPACE_USER,
                                 name, value, size);
     }
@@ -93,8 +90,7 @@ static ssize_t xattr_setxattr(const char *path, const char *name,
     /* freebsd returns the written length on success, not zero. */
     if (rv >= 0) {
         return 0;
-    }
-    else {
+    } else {
         return rv;
     }
 }
@@ -109,8 +105,7 @@ static ssize_t xattr_removexattr(const char *path, const char *name,
 
     if (options & XATTR_XATTR_NOFOLLOW) {
         return extattr_delete_link(path, EXTATTR_NAMESPACE_USER, name);
-    }
-    else {
+    } else {
         return extattr_delete_file(path, EXTATTR_NAMESPACE_USER, name);
     }
 }
@@ -127,8 +122,7 @@ static ssize_t xattr_listxattr(const char *path, char *namebuf,
 
     if (options & XATTR_XATTR_NOFOLLOW) {
         rv = extattr_list_link(path, EXTATTR_NAMESPACE_USER, namebuf, size);
-    }
-    else {
+    } else {
         rv = extattr_list_file(path, EXTATTR_NAMESPACE_USER, namebuf, size);
     }
 
@@ -149,8 +143,7 @@ static ssize_t xattr_fgetxattr(int fd, const char *name, void *value,
 
     if (options & XATTR_XATTR_NOFOLLOW) {
         return -1;
-    }
-    else {
+    } else {
         return extattr_get_fd(fd, EXTATTR_NAMESPACE_USER, name, value, size);
     }
 }
@@ -171,15 +164,13 @@ static ssize_t xattr_fsetxattr(int fd, const char *name, void *value,
     if (options == XATTR_XATTR_CREATE ||
         options == XATTR_XATTR_REPLACE) {
         /* freebsd noop */
-    }
-    else if (options != 0) {
+    } else if (options != 0) {
         return -1;
     }
 
     if (nofollow) {
         return -1;
-    }
-    else {
+    } else {
         rv = extattr_set_fd(fd, EXTATTR_NAMESPACE_USER,
                             name, value, size);
     }
@@ -187,8 +178,7 @@ static ssize_t xattr_fsetxattr(int fd, const char *name, void *value,
     /* freebsd returns the written length on success, not zero. */
     if (rv >= 0) {
         return 0;
-    }
-    else {
+    } else {
         return rv;
     }
 }
@@ -203,8 +193,7 @@ static ssize_t xattr_fremovexattr(int fd, const char *name, int options)
 
     if (options & XATTR_XATTR_NOFOLLOW) {
         return -1;
-    }
-    else {
+    } else {
         return extattr_delete_fd(fd, EXTATTR_NAMESPACE_USER, name);
     }
 }
@@ -221,8 +210,7 @@ static ssize_t xattr_flistxattr(int fd, char *namebuf, size_t size, int options)
 
     if (options & XATTR_XATTR_NOFOLLOW) {
         return -1;
-    }
-    else {
+    } else {
         rv = extattr_list_fd(fd, EXTATTR_NAMESPACE_USER, namebuf, size);
     }
 
@@ -475,7 +463,6 @@ static ssize_t xattr_removexattr(const char *path, const char *name, int options
         return removexattr(path, name);
     }
 }
-
 
 static ssize_t xattr_listxattr(const char *path, char *namebuf, size_t size, int options) {
     if (!(options == 0 || options == XATTR_XATTR_NOFOLLOW)) {
