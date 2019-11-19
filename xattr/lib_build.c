@@ -29,7 +29,7 @@
 static void convert_bsd_list(char *namebuf, size_t size)
 {
     size_t offset = 0;
-    while(offset < size) {
+    while (offset < size) {
         int length = (int) (unsigned char)namebuf[offset];
         memmove(namebuf+offset, namebuf+offset+1, length);
         namebuf[offset+length] = '\0';
@@ -258,19 +258,19 @@ static ssize_t xattr_fgetxattr(int fd, const char *name, void *value,
     /* XXX should check that name does not have / characters in it */
     xfd = openat(fd, name, O_RDONLY | O_XATTR);
     if (xfd == -1) {
-    return -1;
+        return -1;
     }
     if (lseek(xfd, position, SEEK_SET) == -1) {
-    close(xfd);
-    return -1;
+        close(xfd);
+        return -1;
     }
     if (value == NULL) {
         if (fstat(xfd, &statbuf) == -1) {
-        close(xfd);
-        return -1;
+            close(xfd);
+            return -1;
         }
-    close(xfd);
-    return statbuf.st_size;
+        close(xfd);
+        return statbuf.st_size;
     }
     /* XXX should keep reading until the buffer is exhausted or EOF */
     bytes = read(xfd, value, size);
@@ -294,7 +294,7 @@ static ssize_t xattr_getxattr(const char *path, const char *name,
           O_RDONLY |
           ((options & XATTR_XATTR_NOFOLLOW) ? O_NOFOLLOW : 0));
     if (fd == -1) {
-    return -1;
+        return -1;
     }
     bytes = xattr_fgetxattr(fd, name, value, size, position, options);
     close(fd);
@@ -314,16 +314,16 @@ static ssize_t xattr_fsetxattr(int fd, const char *name, void *value,
          ((options & XATTR_XATTR_REPLACE) ? O_RDWR : O_WRONLY|O_CREAT),
          0644);
     if (xfd == -1) {
-    return -1;
-    }
-    while (size > 0) {
-    bytes = write(xfd, value, size);
-    if (bytes == -1) {
-        close(xfd);
         return -1;
     }
-    size -= bytes;
-    value += bytes;
+    while (size > 0) {
+        bytes = write(xfd, value, size);
+        if (bytes == -1) {
+            close(xfd);
+            return -1;
+        }
+        size -= bytes;
+        value += bytes;
     }
     close(xfd);
     return 0;
@@ -343,7 +343,7 @@ static ssize_t xattr_setxattr(const char *path, const char *name,
     fd = open(path,
           O_RDONLY | (options & XATTR_XATTR_NOFOLLOW) ? O_NOFOLLOW : 0);
     if (fd == -1) {
-    return -1;
+        return -1;
     }
     bytes = xattr_fsetxattr(fd, name, value, size, position, options);
     close(fd);
@@ -352,7 +352,7 @@ static ssize_t xattr_setxattr(const char *path, const char *name,
 
 static ssize_t xattr_fremovexattr(int fd, const char *name, int options)
 {
-  int xfd, status;
+    int xfd, status;
     /* XXX should check that name does not have / characters in it */
     if (!(options == 0 || options == XATTR_XATTR_NOFOLLOW)) {
         return -1;
@@ -362,7 +362,7 @@ static ssize_t xattr_fremovexattr(int fd, const char *name, int options)
     }
     xfd = openat(fd, ".", O_XATTR, 0644);
     if (xfd == -1) {
-    return -1;
+        return -1;
     }
     status = unlinkat(xfd, name, 0);
     close(xfd);
@@ -378,7 +378,7 @@ static ssize_t xattr_removexattr(const char *path, const char *name,
     fd = open(path,
           O_RDONLY | ((options & XATTR_XATTR_NOFOLLOW) ? O_NOFOLLOW : 0));
     if (fd == -1) {
-    return -1;
+        return -1;
     }
     status =  xattr_fremovexattr(fd, name, options);
     close(fd);
@@ -394,7 +394,7 @@ static ssize_t xattr_xflistxattr(int xfd, char *namebuf, size_t size, int option
 
     dirp = fdopendir(xfd);
     if (dirp == NULL) {
-        return (-1);
+        return -1;
     }
     while (entry = readdir(dirp)) {
         if (strcmp(entry->d_name, ".") == 0 ||
